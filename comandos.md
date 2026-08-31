@@ -25,6 +25,10 @@ CREATE TABLE produtos(
     descricao TEXT, -- como é opcional, colocamos NULL ou omitimos
     preco DECIMAL(10, 2) NOT NULL, 
     quantidade INT NOT NULL, 
-    fornecedor_id INT NOT NULL 
+    fornecedor_id INT NOT NULL,
+
+    -- COnfigurando a chave estrangeira fornecedor_id
+    -- que se conecta (referencia) a chave primária id na tabela fornecedores
+    FOREIGN KEY (fornecedor_id) REFERENCES fornecedores(id)
 );
 ```
