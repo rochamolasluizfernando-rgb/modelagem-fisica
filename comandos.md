@@ -1,6 +1,5 @@
 # Referência de comandos SQL para Modelagem Física
 
-
 ## Criação do banco de dados
 
 ```sql
@@ -31,4 +30,67 @@ CREATE TABLE produtos(
     -- que se conecta (referencia) a chave primária id na tabela fornecedores
     FOREIGN KEY (fornecedor_id) REFERENCES fornecedores(id)
 );
+```
+
+## Criação da tabela lojas 
+
+```sql
+CREATE TABLE lojas(
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    nome VARCHAR(100) NOT NULL
+);
+```
+
+## Criação da tabela lojas_produtos 
+
+Nesta tabela, é necessário definir **dois relacionamentos**, um apontando para 
+**produtos** e outro apontando para **lojas**.
+
+```sql 
+CREATE TABLE lojas_produtos(
+    loja_id INT NOT NULL, 
+    produto_id INT NOT NULL, 
+    estoque INT NOT NULL,
+
+    -- Definindo a chave primária COMPOSTA
+    PRIMARY KEY (loja_id, produto_id),
+
+    -- Criando as FKs apontando para as PKs de cada tabela 
+
+    -- Regras para consistência nas operações de estoque 
+
+    -- 1) Se uma loja for excluída, os estoque dela também serão.
+    FOREIGN KEY (loja_id) REFERENCES lojas (id) ON DELETE CASCADE,
+
+    -- 2) Ao tentar excluir um produto, o banco deve impedir a exclusão 
+    FOREIGN KEY (produto_id) REFERENCES produtos (id) ON DELETE RESTRICT
+);
+```
+
+--- 
+
+## Criação da tabela de exemplos para operações estruturais 
+
+```sql 
+CREATE TABLE exemplos(
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    nome VARCHAR(100) NULL,
+);
+```
+
+## Usando ALTER TABLE para as alterações estruturais 
+
+```sql 
+ALTER TABLE exemplos RENAME TO clientes;
+```
+
+### Renomeando a coluna 
+
+```sql 
+ALTER TABLE clientes CHANGE COLUMN nome nome_completo VARCHAR(100) NOT NULL;
+```
+
+### Adicionando coluna e definindo um valor padrão (default)
+```sql 
+ALTER TABLE clientes ADD COLUMN idade INT NOT NULL DEFAULT 0;
 ```
